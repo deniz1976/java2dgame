@@ -40,6 +40,7 @@ public class Sprite
     public static Sprite projectile_wizard = new Sprite(16,0,0,SpriteSheet.projectile_wizard);
 
     public static Sprite particle_normal = new Sprite(3,0xAAAAAA);
+    public static Sprite dummy = new Sprite(32,0,0,SpriteSheet.dummy_down);
 
 
 
@@ -112,17 +113,11 @@ public class Sprite
 
     private void load()
     {
-        for(int y = 0; y < SIZE; y++)
+        for(int y = 0; y < height; y++)
         {
-            for(int x = 0; x < SIZE; x++)
+            for(int x = 0; x < width; x++)
             {
-                int xo = this.x + x;
-                int yo = this.y + y;
-                if(xo < sheet.SIZE && yo < sheet.SIZE) {
-                    pixels[x + y * SIZE] = sheet.pixels[xo + yo * sheet.SIZE];
-                } else {
-                    pixels[x + y * SIZE] = 0xffff00ff; // Pink (transparent) color
-                }
+                pixels[x + y * width] = sheet.pixels[(x + this.x) + (y + this.y) * sheet.WIDTH];
             }
         }
     }

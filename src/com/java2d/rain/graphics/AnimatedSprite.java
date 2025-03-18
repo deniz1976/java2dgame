@@ -37,6 +37,7 @@ public class AnimatedSprite extends Sprite
         return sprite;
     }
 
+
     public void setFrameRate(int frames)
     {
         this.frame = frames;

@@ -1,5 +1,7 @@
 package com.java2d.rain.graphics;
 
+import com.java2d.rain.entity.mob.Chaser;
+import com.java2d.rain.entity.mob.Mob;
 import com.java2d.rain.entity.projectile.Projectile;
 import com.java2d.rain.level.tile.Tile;
 
@@ -72,7 +74,7 @@ public class Screen
         }
     }
 
-    public void renderPlayer(int xp, int yp, Sprite sprite, int flip)
+    public void renderMob(int xp, int yp, Sprite sprite, int flip)
     {
         xp -= xOffset;
         yp -= yOffset;
@@ -89,6 +91,28 @@ public class Screen
                 if(xa < -32 || xa >= width || ya < 0 || ya >= height) continue;
                 if(xa < 0) xa = 0;
                 int col = sprite.pixels[xs + ys * 32];
+                if(col != 0xffff00ff)
+                    pixels[xa + ya * width] = col;
+            }
+        }
+    }
+
+    public void renderMob(int xp, int yp, Mob mob)
+    {
+        xp -= xOffset;
+        yp -= yOffset;
+        for(int y = 0; y < 32; y++)
+        {
+            int ya = yp + y;
+            int ys = y;
+            for(int x = 0; x < 32; x++)
+            {
+                int xa = xp + x;
+                int xs = x;
+                if(xa < -32 || xa >= width || ya < 0 || ya >= height) continue;
+                if(xa < 0) xa = 0;
+                int col = mob.getSprite().pixels[xs + ys * 32];
+                if(mob instanceof Chaser && col == 0xff472bbf) col = 0xffba0015;
                 if(col != 0xffff00ff)
                     pixels[xa + ya * width] = col;
             }

@@ -112,70 +112,8 @@ public class Player extends Mob
     public void render(Screen screen)
     {
         int flip = 0;
-//        if(dir == 0)
-//        {
-//            sprite = Sprite.player_forward;
-//            if(walking)
-//            {
-//                if(anim % 20 > 10 )
-//                {
-//                    sprite = Sprite.player_forward_1;
-//                }
-//                else
-//                {
-//                    sprite = Sprite.player_forward_2;
-//                }
-//            }
-//        }
-//
-//        else if(dir == 1)
-//        {
-//            sprite = Sprite.player_side;
-//            if(walking)
-//            {
-//                if(anim % 20 > 10 )
-//                {
-//                    sprite = Sprite.player_side_1;
-//                }
-//                else
-//                {
-//                    sprite = Sprite.player_side_2;
-//                }
-//            }
-//        }
-//        else if(dir == 2)
-//        {
-//            sprite = Sprite.player_back;
-//            if(walking)
-//            {
-//                if(anim % 20 > 10 )
-//                {
-//                    sprite = Sprite.player_back_1;
-//                }
-//                else
-//                {
-//                    sprite = Sprite.player_back_2;
-//                }
-//            }
-//        }
-//        else if(dir == 3)
-//        {
-//            sprite = Sprite.player_side;
-//            if(walking)
-//            {
-//                if(anim % 20 > 10 )
-//                {
-//                    sprite = Sprite.player_side_1;
-//                }
-//                else
-//                {
-//                    sprite = Sprite.player_side_2;
-//                }
-//            }
-//            flip = 1;
-//        }
         sprite = animSprite.getSprite();
-        screen.renderPlayer(x-16,y-16,sprite,flip);
+        screen.renderMob(x-16,y-16,sprite,flip);
 
     }
 }

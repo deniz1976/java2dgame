@@ -3,7 +3,7 @@ package com.java2d.rain.entity.spawner;
 import com.java2d.rain.entity.Entity;
 import com.java2d.rain.level.Level;
 
-public class Spawner extends Entity
+public abstract class Spawner extends Entity
 {
     public enum Type
     {
@@ -20,4 +20,5 @@ public class Spawner extends Entity
         this.type = type;
 
     }
+
 }

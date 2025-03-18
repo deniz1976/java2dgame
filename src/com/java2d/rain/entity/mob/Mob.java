@@ -3,13 +3,20 @@ package com.java2d.rain.entity.mob;
 import com.java2d.rain.entity.Entity;
 import com.java2d.rain.entity.projectile.Projectile;
 import com.java2d.rain.entity.projectile.WizardProjectile;
+import com.java2d.rain.graphics.Screen;
 import com.java2d.rain.graphics.Sprite;
 
 
 public abstract class Mob extends Entity
 {
-    protected Sprite sprite;
-    protected int dir = 0;
+    protected boolean moving;
+    protected boolean walking;
+
+    protected enum DIRECTION {
+        UP, DOWN, LEFT, RIGHT
+    }
+
+    protected DIRECTION dir;
 
 
 
@@ -22,10 +29,10 @@ public abstract class Mob extends Entity
             return;
         }
 
-        if(xa > 0) dir = 1; // east
-        else if(xa < 0) dir = 3; // west
-        if(ya > 0) dir = 2; // south
-        else if(ya < 0) dir = 0; // north
+        if(xa > 0) dir = DIRECTION.UP; // east
+        else if(xa < 0) dir = DIRECTION.LEFT; // west
+        if(ya > 0) dir = DIRECTION.DOWN; // south
+        else if(ya < 0) dir = DIRECTION.UP; // north
 
         if(!collision(xa,ya))
         {
@@ -35,10 +42,11 @@ public abstract class Mob extends Entity
 
     }
 
-    public void update()
+    public Sprite getSprite()
     {
-
+        return sprite;
     }
+
 
     protected void shoot(int x , int y , double dir)
     {
@@ -71,9 +79,8 @@ public abstract class Mob extends Entity
         return false;
     }
 
-    public void render()
-    {
+    public abstract void render(Screen screen);
 
-    }
+    public abstract void update();
 
 }
