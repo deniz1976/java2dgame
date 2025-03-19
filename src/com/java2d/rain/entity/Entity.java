@@ -8,8 +8,8 @@ import java.util.Random;
 
 public  class Entity
 {
-    public int x;
-    public int y;
+    protected int x;
+    protected int y;
     private boolean removed = false;
     protected Level level;
     protected final Random random = new Random();
@@ -17,6 +17,16 @@ public  class Entity
 
     public  void update(){}
 
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
 
     public void render(Screen screen)
     {

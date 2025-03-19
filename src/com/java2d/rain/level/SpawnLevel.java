@@ -37,7 +37,7 @@ public class SpawnLevel extends Level
             System.out.println("Error loading level");
         }
 
-        add(new Dummy(22,55));
+//        add(new Dummy(22,55));
         add(new Chaser(20,55));
     }
 

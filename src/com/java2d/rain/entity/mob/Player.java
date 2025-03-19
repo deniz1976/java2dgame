@@ -45,30 +45,32 @@ public class Player extends Mob
 
     public void update()
     {
+
         if (walking) animSprite.update();
         else animSprite.setFrame(0);
         if(fireRate > 0) fireRate--;
         int xa = 0 ; int ya = 0 ;
+        int moveSpeed = 1;
         if(anim < 7500) anim++;
         else anim = 0;
         if(input.up)
         {
-            ya--;
+            ya-=moveSpeed;
             animSprite = up;
         }
         if(input.down)
         {
-            ya++;
+            ya+=moveSpeed;
             animSprite = down;
         }
         if(input.left)
         {
-            xa--;
+            xa-=moveSpeed;
             animSprite = left;
         }
         if(input.right)
         {
-            xa++;
+            xa+=moveSpeed;
             animSprite = right;
         }
 

@@ -1,6 +1,7 @@
 package com.java2d.rain.level;
 
 import com.java2d.rain.entity.Entity;
+import com.java2d.rain.entity.mob.Player;
 import com.java2d.rain.entity.particle.Particle;
 import com.java2d.rain.entity.projectile.Projectile;
 import com.java2d.rain.graphics.Screen;
@@ -21,6 +22,8 @@ public class Level
     private final List<Projectile> projectiles = new ArrayList<>();
     private final List<Particle> particles = new ArrayList<>();
 
+    private List<Player> players = new ArrayList<>();
+
 
     public Level(int width, int height)
     {
@@ -37,6 +40,21 @@ public class Level
 
     }
 
+    public List<Player> getPlayer()
+    {
+        return this.players;
+    }
+
+    public Player getPlayerAt(int index)
+    {
+        return players.get(index);
+    }
+
+    public Player getClientPlayer()
+    {
+        return players.get(0);
+    }
+
     public void add(Entity e)
     {
         e.init(this);
@@ -47,6 +65,11 @@ public class Level
         else if(e instanceof Projectile)
         {
             projectiles.add((Projectile) e);
+        }
+
+        else if(e instanceof Player)
+        {
+            players.add((Player) e);
         }
         else
         {
@@ -94,6 +117,10 @@ public class Level
 
     private void remove()
     {
+        entities.removeIf(Entity::isRemoved);
+        projectiles.removeIf(Projectile::isRemoved);
+        particles.removeIf(Particle::isRemoved);
+        players.removeIf(Player::isRemoved);
 
     }
 
@@ -122,6 +149,14 @@ public class Level
             else particle.update();
         }
         particles.removeAll(particlesToRemove);
+
+        List<Player> playersToRemove = new ArrayList<>();
+        for (Player player : players)
+        {
+            if(player.isRemoved()) playersToRemove.add(player);
+            else player.update();
+        }
+        players.removeAll(playersToRemove);
     }
 
     public void render(int xScroll, int yScroll, Screen screen)
@@ -157,12 +192,54 @@ public class Level
             particle.render(screen);
         }
 
+        for (Player player: players)
+        {
+            player.render(screen);
+        }
+
 
     }
 
     protected void generateLevel()
     {
 
+    }
+
+    public List<Entity> getEntities(Entity e , int radius)
+    {
+        List<Entity> result = new ArrayList<>();
+        int ex = e.getX();
+        int ey = e.getY();
+        entities.forEach(entity -> {
+            int x = entity.getX();
+            int y = entity.getY();
+            int dx = Math.abs(x - ex);
+            int dy = Math.abs(y - ey);
+            double distance = Math.sqrt((dx * dx) + (dy * dy));
+            if (distance <= radius) {
+                result.add(entity);
+            }
+        });
+        return result;
+    }
+
+    public List<Player> getPlayers(Entity e , int radius)
+    {
+        List<Player> result = new ArrayList<>();
+        int ex = e.getX();
+        int ey = e.getY();
+        for (Player player : players) {
+            int x = player.getX();
+            int y = player.getY();
+            int dx = Math.abs(x - ex);
+            int dy = Math.abs(y - ey);
+            double distance = Math.sqrt((dx * dx) + (dy * dy));
+            if (distance <= radius) {
+                result.add(player);
+            }
+
+        }
+        return result;
     }
 
     public Tile getTile(int x, int y)

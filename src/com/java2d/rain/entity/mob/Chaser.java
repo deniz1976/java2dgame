@@ -5,6 +5,8 @@ import com.java2d.rain.graphics.Screen;
 import com.java2d.rain.graphics.Sprite;
 import com.java2d.rain.graphics.SpriteSheet;
 
+import java.util.List;
+
 public class Chaser extends Mob
 {
     private final AnimatedSprite down = new AnimatedSprite(SpriteSheet.dummy_down,32,32,3);
@@ -29,12 +31,42 @@ public class Chaser extends Mob
     public void render(Screen screen)
     {
         sprite = animSprite.getSprite();
-        screen.renderMob(x,y,this);
+        screen.renderMob(x - 16,y - 16,this);
+    }
+
+    private void move()
+    {
+        xa = 0;
+        ya = 0;
+
+        List<Player> players = level.getPlayers(this,50);
+
+        if(!players.isEmpty())
+        {
+            Player player = players.get(0);
+            if(x < player.getX()) xa++;
+            if(x > player.getX()) xa--;
+            if(y < player.getY()) ya++;
+            if(y > player.getY()) ya--;
+
+        }
+        if(xa != 0 || ya != 0)
+        {
+            move(xa, ya);
+            walking = true;
+        }
+        else
+        {
+            walking = false;
+        }
+
     }
 
     @Override
     public void update()
     {
+        move();
+
         if(walking)
         {
             animSprite.update();
@@ -64,14 +96,6 @@ public class Chaser extends Mob
             dir = DIRECTION.RIGHT;
         }
 
-        if(xa != 0 ||ya != 0)
-        {
-            move(xa, ya);
-            walking = true;
-        }
-        else
-        {
-            walking = false;
-        }
+
     }
 }
