@@ -18,6 +18,7 @@ public class Player extends Mob
     private int anim = 0;
     private boolean walking = false;
     private int fireRate = 0;
+
     private final AnimatedSprite down = new AnimatedSprite(SpriteSheet.player_down,32,32,3);
     private final AnimatedSprite up = new AnimatedSprite(SpriteSheet.player_up,32,32,3);
     private final AnimatedSprite left = new AnimatedSprite(SpriteSheet.player_left,32,32,3);
@@ -49,28 +50,28 @@ public class Player extends Mob
         if (walking) animSprite.update();
         else animSprite.setFrame(0);
         if(fireRate > 0) fireRate--;
-        int xa = 0 ; int ya = 0 ;
-        int moveSpeed = 2;
+        double xa = 0 ; double ya = 0 ;
+        double speed = 1;
         if(anim < 7500) anim++;
         else anim = 0;
         if(input.up)
         {
-            ya-=moveSpeed;
+            ya-=speed;
             animSprite = up;
         }
         if(input.down)
         {
-            ya+=moveSpeed;
+            ya+=speed;
             animSprite = down;
         }
         if(input.left)
         {
-            xa-=moveSpeed;
+            xa-=speed;
             animSprite = left;
         }
         if(input.right)
         {
-            xa+=moveSpeed;
+            xa+=speed;
             animSprite = right;
         }
 
@@ -115,7 +116,7 @@ public class Player extends Mob
     {
         int flip = 0;
         sprite = animSprite.getSprite();
-        screen.renderMob(x-16,y-16,sprite,flip);
+        screen.renderMob((int)(x-16),(int)y-16,sprite,flip);
 
     }
 }

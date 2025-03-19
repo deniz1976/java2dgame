@@ -8,8 +8,8 @@ import java.util.Random;
 
 public  class Entity
 {
-    protected int x;
-    protected int y;
+    protected double x;
+    protected double y;
     private boolean removed = false;
     protected Level level;
     protected final Random random = new Random();
@@ -18,19 +18,19 @@ public  class Entity
     public  void update(){}
 
 
-    public int getX()
+    public double getX()
     {
         return x;
     }
 
-    public int getY()
+    public double getY()
     {
         return y;
     }
 
     public void render(Screen screen)
     {
-        if(sprite != null) screen.renderSprite(x,y,sprite,true);
+        if(sprite != null) screen.renderSprite((int)x,(int)y,sprite,true);
     }
 
     public void remove()
