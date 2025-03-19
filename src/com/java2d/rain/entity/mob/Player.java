@@ -50,7 +50,7 @@ public class Player extends Mob
         else animSprite.setFrame(0);
         if(fireRate > 0) fireRate--;
         int xa = 0 ; int ya = 0 ;
-        int moveSpeed = 1;
+        int moveSpeed = 2;
         if(anim < 7500) anim++;
         else anim = 0;
         if(input.up)

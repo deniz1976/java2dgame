@@ -20,7 +20,7 @@ public abstract class Mob extends Entity
 
 
 
-    public void move(int xa, int ya)
+    public void move(double xa, double ya)
     {
         if(xa != 0 && ya != 0)
         {
@@ -34,12 +34,34 @@ public abstract class Mob extends Entity
         if(ya > 0) dir = DIRECTION.DOWN; // south
         else if(ya < 0) dir = DIRECTION.UP; // north
 
-        if(!collision(xa,ya))
+
+        for(int x = 0 ; x < Math.abs(xa) ; x++)
         {
-            x += xa;
-            y += ya;
+            if(!collision(abs(xa), ya))
+            {
+                this.x += abs(xa);
+            }
         }
 
+
+        for(int y = 0 ; y < Math.abs(ya) ; y++)
+        {
+            if(!collision(xa, abs(ya)))
+            {
+                this.y += abs(ya);
+            }
+        }
+
+
+    }
+
+    public int abs(double value)
+    {
+        if(value < 0)
+        {
+            return -1;
+        }
+        return 1;
     }
 
     public Sprite getSprite()
@@ -56,27 +78,20 @@ public abstract class Mob extends Entity
 
 
 
-    private boolean collision(int xa, int ya)
+    private boolean collision(double xa, double ya)
     {
-        int left = (x + xa - 8) / 16;
-        int top = (y + ya + 3) / 16;
-        int right = (x + xa + 6) / 16;
-        int bottom = (y + ya + 15) / 16;
-
-        left = Math.max(0, left);
-        top = Math.max(0, top);
-        right = Math.min(level.getWidth() - 1, right);
-        bottom = Math.min(level.getHeight() - 1, bottom);
-
-        for (int xt = left; xt <= right; xt++) {
-            for (int yt = top; yt <= bottom; yt++) {
-                if (level.getTile(xt, yt).solid()) {
-                    return true;
-                }
-            }
+        boolean solid =false;
+        for(int c = 0 ; c < 4 ; c++)
+        {
+            double xt = ((x + xa) - c % 2 * 16 ) / 16;
+            double yt = ((y + ya) - c / 2 * 16) / 16;
+            int ix = (int) Math.ceil(xt);
+            int iy = (int) Math.ceil(yt);
+            if(c % 2 == 0) ix = (int) Math.floor(xt);
+            if(c / 2 == 0) iy = (int) Math.floor(yt);
+            if(level.getTile(ix, iy).solid()) solid = true;
         }
-
-        return false;
+        return solid;
     }
 
     public abstract void render(Screen screen);
