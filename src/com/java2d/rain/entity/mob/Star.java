@@ -56,7 +56,7 @@ public class Star extends Mob
                 Vector2i vec = path.get(path.size() - 1).tile;
                 if(x < (vec.getX() * 16)) xa++;
                 if(x > (vec.getX() * 16)) xa--;
-                if(y < (vec.getY() * 16)) xa++;
+                if(y < (vec.getY() * 16)) ya++;
                 if(y > (vec.getY() * 16)) ya--;
             }
         }
