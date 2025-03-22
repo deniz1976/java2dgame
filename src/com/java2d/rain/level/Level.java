@@ -6,9 +6,9 @@ import com.java2d.rain.entity.particle.Particle;
 import com.java2d.rain.entity.projectile.Projectile;
 import com.java2d.rain.graphics.Screen;
 import com.java2d.rain.level.tile.Tile;
+import com.java2d.rain.util.Vector2i;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Level
 {
@@ -21,6 +21,14 @@ public class Level
     private final List<Entity> entities = new ArrayList<>();
     private final List<Projectile> projectiles = new ArrayList<>();
     private final List<Particle> particles = new ArrayList<>();
+
+    private Comparator<Node> nodeSorter = new Comparator<Node>()
+    {
+        public int compare(Node n0, Node n1)
+        {
+            return Double.compare(n0.fCost, n1.fCost);
+        }
+    };
 
     private List<Player> players = new ArrayList<>();
 
@@ -53,6 +61,140 @@ public class Level
     public Player getClientPlayer()
     {
         return players.get(0);
+    }
+
+    public List<Node> findPath(Vector2i start, Vector2i goal)
+    {
+        List<Node> openList = new ArrayList<>();
+        List<Node> closedList = new ArrayList<>();
+
+        Node current = new Node(start,null,0,getDistance(start, goal));
+        openList.add(current);
+        while(!openList.isEmpty())
+        {
+            openList.sort(nodeSorter);
+            current = openList.get(0);
+            if(current.tile.equals(goal))
+            {
+                List<Node> path = new ArrayList<>();
+                while(current.parent != null)
+                {
+                    path.add(current);
+                    current = current.parent;
+                }
+
+                openList.clear();
+                closedList.clear();
+                return path;
+            }
+
+            openList.remove(current);
+            closedList.add(current);
+            for(int i = 0 ; i < 9 ; i++)
+            {
+                if(i == 4) continue;
+                int x = current.tile.getX();
+                int y = current.tile.getY();
+                int xi = (i % 3) - 1;
+                int yi = (i / 3) - 1;
+                Tile at = getTile(xi + x, yi + y);
+                if(at == null) continue;
+                if(at.solid()) continue;
+                Vector2i a = new Vector2i(x + xi, y + yi);
+                double gCost = current.gCost + getDistance(current.tile, a);
+                double hCost = getDistance(a,goal);
+                Node node = new Node(a,current,gCost,hCost);
+                if(VecInList(closedList,a) && gCost >= node.gCost) continue;
+                if(!VecInList(openList,a) || gCost < node.gCost) openList.add(node);
+            }
+        }
+
+        closedList.clear();
+        return null;
+    }
+
+
+//    public List<Node> findPath(Vector2i start, Vector2i goal) {
+//        PriorityQueue<Node> openList = new PriorityQueue<>(nodeSorter);
+//        Set<Vector2i> closedSet = new HashSet<>();
+//        Map<Vector2i, Node> openMap = new HashMap<>();
+//
+//        Node startNode = new Node(start, null, 0, getDistance(start, goal));
+//        openList.add(startNode);
+//        openMap.put(start, startNode);
+//
+//        while (!openList.isEmpty()) {
+//            Node current = openList.poll();
+//            openMap.remove(current.tile);
+//
+//
+//            if (current.tile.equals(goal)) {
+//                List<Node> path = new ArrayList<>();
+//                while (current.parent != null) {
+//                    path.add(current);
+//                    current = current.parent;
+//                }
+//                Collections.reverse(path);
+//                return path;
+//            }
+//
+//            closedSet.add(current.tile);
+//
+//
+//            for (int i = 0; i < 9; i++) {
+//                if (i == 4) continue;
+//
+//                int xi = (i % 3) - 1;
+//                int yi = (i / 3) - 1;
+//                int x = current.tile.getX() + xi;
+//                int y = current.tile.getY() + yi;
+//
+//                Vector2i neighborPos = new Vector2i(x, y);
+//
+//                if (closedSet.contains(neighborPos)) continue;
+//
+//                Tile at = getTile(x, y);
+//                if (at == null || at.solid()) continue;
+//
+//                boolean isDiagonal = xi != 0 && yi != 0;
+//                double moveCost = isDiagonal ? 1.414 : 1.0;
+//
+//                double gCost = current.gCost + moveCost * getDistance(current.tile, neighborPos);
+//                double hCost = getDistance(neighborPos, goal);
+//
+//                Node neighbor = openMap.get(neighborPos);
+//
+//                if (neighbor == null) {
+//                    neighbor = new Node(neighborPos, current, gCost, hCost);
+//                    openList.add(neighbor);
+//                    openMap.put(neighborPos, neighbor);
+//                } else if (gCost < neighbor.gCost) {
+//                    openList.remove(neighbor);
+//                    neighbor.parent = current;
+//                    neighbor.gCost = gCost;
+//                    neighbor.fCost = gCost + hCost;
+//                    openList.add(neighbor);
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
+
+    private boolean VecInList(List<Node> list,Vector2i vector)
+    {
+        for(Node n : list)
+        {
+            if(n.tile.equals(vector)) return true;
+        }
+        return false;
+    }
+
+    private double getDistance(Vector2i tile, Vector2i goal)
+    {
+        double dx = tile.getX() - goal.getX();
+        double dy = tile.getY() - goal.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public void add(Entity e)

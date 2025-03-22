@@ -128,7 +128,6 @@ public class Game extends Canvas implements Runnable
     public void update()
     {
         key.update();
-//        player.update();
         level.update();
     }
 
@@ -145,7 +144,6 @@ public class Game extends Canvas implements Runnable
         double xScroll = player.getX() - screen.width / 2;
         double yScroll = player.getY() - screen.height / 2;
         level.render((int)xScroll, (int)yScroll, screen);
-//        player.render(screen);
 
         System.arraycopy(screen.pixels, 0, pixels, 0, pixels.length);
 

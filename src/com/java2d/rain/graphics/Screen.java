@@ -2,6 +2,7 @@ package com.java2d.rain.graphics;
 
 import com.java2d.rain.entity.mob.Chaser;
 import com.java2d.rain.entity.mob.Mob;
+import com.java2d.rain.entity.mob.Star;
 import com.java2d.rain.entity.projectile.Projectile;
 import com.java2d.rain.level.tile.Tile;
 
@@ -113,6 +114,7 @@ public class Screen
                 if(xa < 0) xa = 0;
                 int col = mob.getSprite().pixels[xs + ys * 32];
                 if(mob instanceof Chaser && col == 0xff472bbf) col = 0xffba0015;
+                if(mob instanceof Star && col == 0xff472bbf) col = 0xffE8E83A;
                 if(col != 0xffff00ff)
                     pixels[xa + ya * width] = col;
             }

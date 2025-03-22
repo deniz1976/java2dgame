@@ -6,8 +6,8 @@ import com.java2d.rain.level.tile.spawn_level.*;
 
 public class Tile
 {
-    public int x;
-    public int y;
+//    public int x;
+//    public int y;
 
     public Sprite sprite;
 
