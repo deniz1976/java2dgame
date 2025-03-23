@@ -2,6 +2,7 @@ package com.java2d.rain.level;
 
 import com.java2d.rain.entity.mob.Chaser;
 import com.java2d.rain.entity.mob.Dummy;
+import com.java2d.rain.entity.mob.Shooter;
 import com.java2d.rain.entity.mob.Star;
 
 import javax.imageio.ImageIO;
@@ -40,8 +41,10 @@ public class SpawnLevel extends Level
 
 //        add(new Dummy(22,55));
 //        add(new Chaser(20,55));
-        add(new Star(17,35));
+//        add(new Star(17,35));
+        add(new Shooter(17,35));
     }
+
 
     @Override
     protected void generateLevel()

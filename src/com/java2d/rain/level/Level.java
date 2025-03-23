@@ -65,121 +65,68 @@ public class Level
 
     public List<Node> findPath(Vector2i start, Vector2i goal)
     {
-        List<Node> openList = new ArrayList<>();
-        List<Node> closedList = new ArrayList<>();
+        PriorityQueue<Node> openList = new PriorityQueue<>((n1, n2) -> Double.compare(n1.fCost, n2.fCost));
+        Set<Vector2i> closedSet = new HashSet<>();
+        Map<Vector2i, Node> openMap = new HashMap<>();
 
-        Node current = new Node(start,null,0,getDistance(start, goal));
-        openList.add(current);
-        while(!openList.isEmpty())
-        {
-            openList.sort(nodeSorter);
-            current = openList.get(0);
-            if(current.tile.equals(goal))
-            {
+        Node startNode = new Node(start, null, 0, getDistance(start, goal));
+        openList.add(startNode);
+        openMap.put(start, startNode);
+
+        while (!openList.isEmpty()) {
+            Node current = openList.poll();
+            openMap.remove(current.tile);
+
+            if (current.tile.equals(goal)) {
                 List<Node> path = new ArrayList<>();
-                while(current.parent != null)
-                {
+                while (current.parent != null) {
                     path.add(current);
                     current = current.parent;
                 }
-
-                openList.clear();
-                closedList.clear();
                 return path;
             }
 
-            openList.remove(current);
-            closedList.add(current);
-            for(int i = 0 ; i < 9 ; i++)
-            {
-                if(i == 4) continue;
-                int x = current.tile.getX();
-                int y = current.tile.getY();
+            closedSet.add(current.tile);
+
+            for (int i = 0; i < 9; i++) {
+                if (i == 4) continue;
+                
                 int xi = (i % 3) - 1;
                 int yi = (i / 3) - 1;
-                Tile at = getTile(xi + x, yi + y);
-                if(at == null) continue;
-                if(at.solid()) continue;
-                Vector2i a = new Vector2i(x + xi, y + yi);
-                double gCost = current.gCost + getDistance(current.tile, a);
-                double hCost = getDistance(a,goal);
-                Node node = new Node(a,current,gCost,hCost);
-                if(VecInList(closedList,a) && gCost >= node.gCost) continue;
-                if(!VecInList(openList,a) || gCost < node.gCost) openList.add(node);
+                int x = current.tile.getX() + xi;
+                int y = current.tile.getY() + yi;
+                
+                Vector2i neighborPos = new Vector2i(x, y);
+                
+                if (closedSet.contains(neighborPos)) continue;
+                
+                Tile at = getTile(x, y);
+                if (at == null || at.solid()) continue;
+                
+                boolean isDiagonal = xi != 0 && yi != 0;
+                double moveCost = isDiagonal ? 1.414 : 1.0;
+                
+                double gCost = current.gCost + moveCost;
+                double hCost = getDistance(neighborPos, goal);
+                
+                Node neighbor = openMap.get(neighborPos);
+                
+                if (neighbor == null) {
+                    neighbor = new Node(neighborPos, current, gCost, hCost);
+                    openList.add(neighbor);
+                    openMap.put(neighborPos, neighbor);
+                } else if (gCost < neighbor.gCost) {
+                    openList.remove(neighbor);
+                    neighbor.parent = current;
+                    neighbor.gCost = gCost;
+                    neighbor.fCost = gCost + hCost;
+                    openList.add(neighbor);
+                }
             }
         }
-
-        closedList.clear();
+        
         return null;
     }
-
-
-//    public List<Node> findPath(Vector2i start, Vector2i goal) {
-//        PriorityQueue<Node> openList = new PriorityQueue<>(nodeSorter);
-//        Set<Vector2i> closedSet = new HashSet<>();
-//        Map<Vector2i, Node> openMap = new HashMap<>();
-//
-//        Node startNode = new Node(start, null, 0, getDistance(start, goal));
-//        openList.add(startNode);
-//        openMap.put(start, startNode);
-//
-//        while (!openList.isEmpty()) {
-//            Node current = openList.poll();
-//            openMap.remove(current.tile);
-//
-//
-//            if (current.tile.equals(goal)) {
-//                List<Node> path = new ArrayList<>();
-//                while (current.parent != null) {
-//                    path.add(current);
-//                    current = current.parent;
-//                }
-//                Collections.reverse(path);
-//                return path;
-//            }
-//
-//            closedSet.add(current.tile);
-//
-//
-//            for (int i = 0; i < 9; i++) {
-//                if (i == 4) continue;
-//
-//                int xi = (i % 3) - 1;
-//                int yi = (i / 3) - 1;
-//                int x = current.tile.getX() + xi;
-//                int y = current.tile.getY() + yi;
-//
-//                Vector2i neighborPos = new Vector2i(x, y);
-//
-//                if (closedSet.contains(neighborPos)) continue;
-//
-//                Tile at = getTile(x, y);
-//                if (at == null || at.solid()) continue;
-//
-//                boolean isDiagonal = xi != 0 && yi != 0;
-//                double moveCost = isDiagonal ? 1.414 : 1.0;
-//
-//                double gCost = current.gCost + moveCost * getDistance(current.tile, neighborPos);
-//                double hCost = getDistance(neighborPos, goal);
-//
-//                Node neighbor = openMap.get(neighborPos);
-//
-//                if (neighbor == null) {
-//                    neighbor = new Node(neighborPos, current, gCost, hCost);
-//                    openList.add(neighbor);
-//                    openMap.put(neighborPos, neighbor);
-//                } else if (gCost < neighbor.gCost) {
-//                    openList.remove(neighbor);
-//                    neighbor.parent = current;
-//                    neighbor.gCost = gCost;
-//                    neighbor.fCost = gCost + hCost;
-//                    openList.add(neighbor);
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
 
     private boolean VecInList(List<Node> list,Vector2i vector)
     {
