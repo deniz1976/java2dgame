@@ -42,7 +42,8 @@ public class SpawnLevel extends Level
 //        add(new Dummy(22,55));
 //        add(new Chaser(20,55));
 //        add(new Star(17,35));
-        add(new Shooter(17,35));
+        add(new Shooter(17,55));
+        add(new Dummy(20,53));
     }
 
 

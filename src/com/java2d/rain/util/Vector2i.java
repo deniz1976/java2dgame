@@ -55,6 +55,11 @@ public class Vector2i
         this.y = y;
     }
 
+    public static double getDistance(Vector2i v0 , Vector2i v1)
+    {
+        return Math.sqrt(Math.pow(v0.x - v1.x, 2) + Math.pow(v0.y - v1.y, 2));
+    }
+
     public int getX()
     {
         return x;
