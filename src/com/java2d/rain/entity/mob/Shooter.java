@@ -80,33 +80,29 @@ public class Shooter extends Mob
         {
             walking = false;
         }
+        shootRandom();
+
+
+    }
+
+    private void shootRandom()
+    {
         List<Entity> entities = level.getEntities(this,500);
-
-        Player player  = level.getClientPlayer();
-        entities.add(player);
-
-        double min = 0 ;
-        Entity closest = null;
-
-        for(int i = 0 ; i < entities.size() ; i++)
+        entities.add(level.getClientPlayer());
+        Entity rand = null;
+        if(time % (random.nextInt(91) + 30) == 0)
         {
-            Entity e = entities.get(i);
-            double distance = Vector2i.getDistance(new Vector2i((int)x,(int)y),new Vector2i((int)e.getX(),(int)e.getY()));
-            if(i == 0 || distance < min)
-            {
-                min = distance;
-                closest = e;
-            }
-
+            int index = random.nextInt(entities.size());
+            rand = entities.get(index);
         }
 
-
-            double dx = closest.getX() - x;
-            double dy = closest.getY() - y;
-            double dir = Math.atan2(dy, dx);
-            shoot(x, y, dir);
-
-
+        if(rand != null)
+        {
+            double dx = rand.getX() - x;
+            double dy = rand.getY() - y;
+            double dir = Math.atan2(dy,dx);
+            shoot(x,y,dir);
+        }
     }
 
     @Override
